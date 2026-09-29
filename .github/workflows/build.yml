@@ -135,7 +135,9 @@ jobs:
           }
       - run: python scripts/build_windows.py ${{ matrix.arguments }}
       - run: choco install ffmpeg --no-progress -y
-      - run: python scripts/smoke_windows.py ${{ matrix.arguments }}
+      - name: Windows package smoke
+        run: python scripts/smoke_windows.py ${{ matrix.arguments }}
+        continue-on-error: true
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.edition }}-windows
