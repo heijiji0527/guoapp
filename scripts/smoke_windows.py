@@ -18,7 +18,7 @@ def main():
     variant = BuildVariant(parser.parse_args().all_sources)
     if platform.system() != 'Windows':
         raise SystemExit('此检查需要 Windows。')
-    version = re.search(r'^version:\s*(\S+)', (root / 'pubspec.yaml').read_text(), re.MULTILINE).group(1)
+    version = re.search(r'^version:\s*(\S+)', (root / 'pubspec.yaml').read_text(encoding='utf-8'), re.MULTILINE).group(1)
     package = root / 'dist' / 'windows' / f'{variant.slug}-{version}-windows-x64.zip'
     with tempfile.TemporaryDirectory(prefix='zhenguojian-smoke-') as temporary:
         directory = Path(temporary)
