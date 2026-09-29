@@ -34,8 +34,8 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create "${{ inputs.tag }}" -R wuquan0527/guoapp \
+          gh release create "${{ inputs.tag }}" -R heijiji0527/guoapp \
             --title "真果鉴/红果鉴 ${{ inputs.tag }} 预览版（debug 签名）" \
             --notes "Android 预览 APK（arm64-v8a 主流手机 / armeabi-v7a 旧设备 / x86_64 模拟器）、Windows x64 便携压缩包、iOS 未签名 IPA。未配置正式签名，安装时可能提示未知来源。" || true
-          gh release upload "${{ inputs.tag }}" -R wuquan0527/guoapp *.apk --clobber
-          gh release upload "${{ inputs.tag }}" -R wuquan0527/guoapp *.zip *.ipa --clobber || true
+          gh release upload "${{ inputs.tag }}" -R heijiji0527/guoapp *.apk --clobber
+          gh release upload "${{ inputs.tag }}" -R heijiji0527/guoapp *.zip *.ipa --clobber || true
