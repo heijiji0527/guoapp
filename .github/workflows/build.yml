@@ -74,6 +74,8 @@ jobs:
           flutter-version: '3.47.4'
           channel: stable
           cache: true
+      - uses: android-actions/setup-android@v3
+      - run: yes | sdkmanager --licenses > /dev/null || true
       - run: sdkmanager 'ndk;28.2.13676358'
       - name: Configure Android signing
         run: python scripts/configure_signing.py
