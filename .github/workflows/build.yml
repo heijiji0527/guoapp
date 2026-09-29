@@ -122,9 +122,15 @@ jobs:
           flutter-version: '3.47.4'
           channel: stable
           cache: true
-      - uses: egor-tensin/setup-mingw@v2
-        with:
-          platform: x64
+      - name: Install MinGW
+        run: |
+          choco install mingw --version=13.2.0 -y --no-progress
+          Add-Content $env:GITHUB_PATH "C:\ProgramData\mingw64\mingw64\bin"
+          $lib = "C:\ProgramData\mingw64\mingw64\x86_64-w64-mingw32\lib"
+          if (Test-Path $lib) {
+            Remove-Item (Join-Path $lib 'libpthread.dll.a') -ErrorAction SilentlyContinue
+            Remove-Item (Join-Path $lib 'libwinpthread.dll.a') -ErrorAction SilentlyContinue
+          }
       - run: python scripts/build_windows.py ${{ matrix.arguments }}
       - run: choco install ffmpeg --no-progress -y
       - run: python scripts/smoke_windows.py ${{ matrix.arguments }}
