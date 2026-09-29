@@ -28,6 +28,8 @@ jobs:
           path: dist
           pattern: '*-ios-unsigned'
           merge-multiple: true
+      - name: Install zip
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq zip
       - name: Wrap Runner.app into unsigned ipa
         run: |
           find dist -name '*-ios-unsigned-app.zip' -print
