@@ -42,7 +42,6 @@ jobs:
             mkdir "$TMP/Payload"
             mv "$APP" "$TMP/Payload/"
             (cd "$TMP" && zip -qr "$OLDPWD/$NAME-ios-unsigned.ipa" Payload)
-            cp "$NAME-ios-unsigned.ipa" .
             ls -la *.ipa
           done
       - name: Upload ipa to release
