@@ -1,0 +1,51 @@
+name: Convert unsigned iOS app to ipa
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: '包含 iOS 构建产物的 run id'
+        required: true
+      tag:
+        description: 'Release 标签'
+        required: true
+        default: 'v0.2.55'
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download iOS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+          path: dist
+          pattern: '*-ios-unsigned'
+          merge-multiple: true
+      - name: Wrap Runner.app into unsigned ipa
+        run: |
+          find dist -name '*-ios-unsigned-app.zip' -print
+          for APPZIP in $(find dist -name '*-ios-unsigned-app.zip'); do
+            NAME=$(basename "$APPZIP" -ios-unsigned-app.zip)
+            TMP=$(mktemp -d)
+            unzip -q "$APPZIP" -d "$TMP"
+            APP=$(find "$TMP" -name 'Runner.app' -maxdepth 4 -type d | head -1)
+            test -n "$APP"
+            mkdir "$TMP/Payload"
+            mv "$APP" "$TMP/Payload/"
+            (cd "$TMP" && zip -qr "$NAME-ios-unsigned.ipa" Payload)
+            cp "$NAME-ios-unsigned.ipa" .
+            ls -la *.ipa
+          done
+      - name: Upload ipa to release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          gh release upload "$TAG" -R heijiji0527/guoapp *.ipa --clobber
