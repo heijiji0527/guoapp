@@ -28,7 +28,7 @@ jobs:
           path: dist
       - name: Collect packages
         run: |
-          find dist \( -name '*.apk' -o -name '*-windows-x64.zip' -o -name '*-ios*' \) -exec mv {} . \;
+          find dist -type f \( -name '*.apk' -o -name '*-windows-x64.zip' -o -name '*-ios*' \) -exec mv {} . \;
           ls -la *.apk *.zip *.ipa 2>/dev/null || true
       - name: Publish to GitHub Release
         env:
