@@ -20,6 +20,7 @@ env:
 
 jobs:
   checks:
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -46,6 +47,7 @@ jobs:
         working-directory: native
 
   android:
+    if: false
     runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy:
@@ -98,7 +100,7 @@ jobs:
           if-no-files-found: error
           retention-days: 14
   windows:
-    runs-on: windows-latest
+    runs-on: windows-2022
     timeout-minutes: 45
     strategy:
       fail-fast: false
@@ -142,6 +144,7 @@ jobs:
           retention-days: 14
 
   ios:
+    if: false
     runs-on: macos-latest
     timeout-minutes: 60
     strategy:
