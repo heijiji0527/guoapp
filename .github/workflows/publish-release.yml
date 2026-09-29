@@ -1,0 +1,39 @@
+name: Publish release
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: '包含构建产物的 Actions run id'
+        required: true
+      tag:
+        description: 'Release 标签'
+        required: true
+        default: 'v0.2.55'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Download android artifacts
+        uses: actions/download-artifact@v4
+        with:
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+          path: dist
+      - name: Collect APKs
+        run: |
+          find dist -name '*.apk' -exec mv {} . \;
+          ls -la *.apk
+      - name: Publish to GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ inputs.tag }}" \
+            --title "真果鉴/红果鉴 ${{ inputs.tag }} 预览版（debug 签名）" \
+            --notes "真果鉴（全站源）与红果鉴（仅红果）Android 预览 APK，--split-per-abi 三架构：arm64-v8a（主流手机）、armeabi-v7a（旧设备）、x86_64（模拟器）。未配置正式签名，安装时可能提示未知来源。" || true
+          gh release upload "${{ inputs.tag }}" *.apk --clobber
