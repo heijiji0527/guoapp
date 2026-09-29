@@ -98,8 +98,6 @@ jobs:
           if-no-files-found: error
           retention-days: 14
   windows:
-    needs: checks
-    if: github.event_name == 'workflow_dispatch'
     runs-on: windows-latest
     timeout-minutes: 45
     strategy:
@@ -138,8 +136,6 @@ jobs:
           retention-days: 14
 
   ios:
-    needs: checks
-    if: github.event_name == 'workflow_dispatch'
     runs-on: macos-latest
     timeout-minutes: 60
     strategy:
